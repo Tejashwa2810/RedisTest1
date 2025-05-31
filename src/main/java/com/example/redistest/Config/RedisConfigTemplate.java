@@ -7,22 +7,22 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+
 @Configuration
 public class RedisConfigTemplate {
 
     @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+    public LettuceConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory("localhost", 6379);
     }
 
     @Bean
-    RedisTemplate<String, Object> redisTemplate() {
+    public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory());
-
-        template.setKeySerializer(new StringRedisSerializer());  // String key
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // JSON value
-
+        template.setConnectionFactory(redisConnectionFactory());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return template;
     }
 }
